@@ -1,6 +1,7 @@
 {
-  "name": "tv-webhook",
+  "name": "trading-bot",
   "version": "1.0.0",
+  "description": "Binance Trading Bot",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
