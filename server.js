@@ -9,8 +9,14 @@ app.get("/", (req, res) => {
 });
 
 app.post("/webhook", (req, res) => {
+  console.log("=== ALERT DITERIMA ===");
   console.log(req.body);
-  res.send("OK");
+
+  res.status(200).json({
+    success: true,
+    message: "Webhook diterima",
+    data: req.body
+  });
 });
 
 const PORT = process.env.PORT || 3000;
