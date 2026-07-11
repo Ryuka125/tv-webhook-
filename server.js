@@ -29,6 +29,32 @@ const ws = new WebSocket(
     "wss://stream.binance.com:9443/ws/btcusdt@trade"
 );
 
+function loadCandles() {
+
+    https.get(
+        "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=100",
+        res => {
+
+            let data = "";
+
+            res.on("data", chunk => data += chunk);
+
+            res.on("end", () => {
+
+                candles = JSON.parse(data);
+
+                console.log(
+                    "Candles berhasil diambil:",
+                    candles.length
+                );
+
+            });
+
+        }
+    );
+
+}
+
 ws.on("open", () => {
     connected = true;
     console.log("✅ Terhubung ke Binance");
