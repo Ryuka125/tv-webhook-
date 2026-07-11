@@ -1,40 +1,41 @@
 const express = require("express");
 
-const state = require("./data/state");
-
-const updateMarket = require("./services/market");
-
-const statusRoute = require("./routes/status");
-
-const webhookRoute = require("./routes/webhook");
-
 const app = express();
-
-app.use(express.json());
 
 const PORT = process.env.PORT || 8080;
 
-// Update market setiap 5 detik
-updateMarket();
+// Import Routes
+const statusRoute = require("./routes/status");
+const webhookRoute = require("./routes/webhook");
 
-setInterval(updateMarket, 5000);
+// Import Services
+const connectWebSocket = require("./services/websocket");
+const updateMarket = require("./services/market");
 
-// Routes
-app.use("/status", statusRoute);
+// Middleware
+app.use(express.json());
 
-app.use("/webhook", webhookRoute);
+// Register Routes
+statusRoute(app);
+webhookRoute(app);
 
+// Home
 app.get("/", (req, res) => {
-
-    res.send("Trading Bot Online");
-
+    res.send("Trading Bot Online 🚀");
 });
 
-app.listen(PORT, () => {
+// Jalankan Service
+connectWebSocket();
 
+updateMarket();
+
+// Update market setiap 5 detik
+setInterval(updateMarket, 5000);
+
+// Start Server
+app.listen(PORT, () => {
     console.log("========================");
-    console.log("Server berjalan");
+    console.log("Trading Bot Running");
     console.log("Port :", PORT);
     console.log("========================");
-
 });
