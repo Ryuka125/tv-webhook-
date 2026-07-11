@@ -18,9 +18,9 @@ const client = Binance();
 let lastPrice = 0;
 
 // WebSocket BTCUSDT
-client.ws.ticker("BTCUSDT", ticker => {
+//client.ws.ticker("BTCUSDT", ticker => {
 
-    lastPrice = Number(ticker.curDayClose);
+    //lastPrice = Number(ticker.curDayClose);
 
     console.clear();
 
@@ -30,7 +30,7 @@ client.ws.ticker("BTCUSDT", ticker => {
     console.log("Waktu :", new Date().toLocaleString());
     console.log("===============");
 
-});
+//});
 
 // Endpoint status
 app.get("/status", (req,res)=>{
