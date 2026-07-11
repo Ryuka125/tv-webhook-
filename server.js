@@ -86,5 +86,8 @@ ws.on("error", (err) => {
 });
 
 app.listen(PORT, () => {
+    loadCandles();
+
+setInterval(loadCandles,60000);
     console.log("Server berjalan di port", PORT);
 });
