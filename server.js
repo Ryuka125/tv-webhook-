@@ -1,54 +1,62 @@
 const express = require("express");
-const Binance = require("binance-api-node").default;
+const WebSocket = require("ws");
 
 const app = express();
-app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
-// Web agar Railway tidak menganggap aplikasi mati
+let lastPrice = 0;
+let connected = false;
+
+// Website
 app.get("/", (req, res) => {
     res.send("Trading Bot Online");
 });
 
-// Client Binance (tanpa API Key dulu)
-const client = Binance();
+// Status bot
+app.get("/status", (req, res) => {
+    res.json({
+        status: connected ? "CONNECTED" : "DISCONNECTED",
+        symbol: "BTCUSDT",
+        price: lastPrice
+    });
+});
 
-// Harga terakhir
-let lastPrice = 0;
+// Koneksi WebSocket Binance
+const ws = new WebSocket(
+    "wss://stream.binance.com:9443/ws/btcusdt@trade"
+);
 
-// WebSocket BTCUSDT
-//client.ws.ticker("BTCUSDT", ticker => {
+ws.on("open", () => {
+    connected = true;
+    console.log("✅ Terhubung ke Binance");
+});
 
-    //lastPrice = Number(ticker.curDayClose);
+ws.on("message", (data) => {
+
+    const json = JSON.parse(data);
+
+    lastPrice = Number(json.p);
 
     console.clear();
-
-    console.log("===============");
+    console.log("====================");
     console.log("BTCUSDT");
     console.log("Harga :", lastPrice);
     console.log("Waktu :", new Date().toLocaleString());
-    console.log("===============");
-
-//});
-
-// Endpoint status
-app.get("/status", (req,res)=>{
-
-    res.json({
-
-        status:"ONLINE",
-
-        symbol:"BTCUSDT",
-
-        price:lastPrice
-
-    });
+    console.log("====================");
 
 });
 
-app.listen(PORT,()=>{
+ws.on("close", () => {
+    connected = false;
+    console.log("❌ WebSocket ditutup");
+});
 
-    console.log("Server berjalan di port",PORT);
+ws.on("error", (err) => {
+    connected = false;
+    console.log("ERROR :", err.message);
+});
 
+app.listen(PORT, () => {
+    console.log("Server berjalan di port", PORT);
 });
