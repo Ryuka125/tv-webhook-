@@ -9,6 +9,9 @@ const PORT = process.env.PORT || 8080;
 const client = Binance();
 
 let lastPrice = 0;
+let trend = "SIDEWAYS";
+let bos = false;
+let choch = false;
 let ema20 = 0;
 let ema50 = 0;
 let signal = "WAIT";
@@ -19,6 +22,32 @@ let closes = [];
 // Hitung EMA
 // ===============================
 function calculateEMA(period, prices) {
+function detectStructure(closes){
+
+    if(closes.length < 10) return;
+
+    const last = closes[closes.length-1];
+    const prevHigh = Math.max(...closes.slice(closes.length-6, closes.length-1));
+    const prevLow = Math.min(...closes.slice(closes.length-6, closes.length-1));
+
+    bos = false;
+    choch = false;
+
+    if(last > prevHigh){
+
+        bos = true;
+        trend = "UP";
+
+    }
+
+    else if(last < prevLow){
+
+        choch = true;
+        trend = "DOWN";
+
+    }
+
+}
 
     if (prices.length < period)
         return null;
@@ -59,6 +88,8 @@ async function updateEMA() {
 
         ema50 = calculateEMA(50, closes);
 
+        detectStructure(closes);
+
         if (ema20 && ema50) {
 
             if (ema20 > ema50)
@@ -80,6 +111,9 @@ async function updateEMA() {
         console.log("EMA20 :", ema20);
         console.log("EMA50 :", ema50);
         console.log("Signal:", signal);
+        console.log("Trend :", trend);
+console.log("BOS :", bos);
+console.log("CHoCH :", choch);
         console.log("======================");
 
     } catch (err) {
@@ -119,6 +153,12 @@ app.get("/status", (req, res) => {
         ema20,
 
         ema50,
+        
+        trend,
+
+bos,
+
+choch,
 
         signal
 
