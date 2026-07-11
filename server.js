@@ -71,7 +71,7 @@ function detectStructure(closes){
 // Ambil Candle Binance
 // ===============================
 async function updateEMA() {
-    detectStructure(closes);
+detectStructure(closes);
 
     try {
 
