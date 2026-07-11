@@ -6,7 +6,7 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.21.2",
-    "ws": "^8.18.0"
+    "binance-api-node": "^0.12.9",
+    "express": "^4.21.2"
   }
 }
