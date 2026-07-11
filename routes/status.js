@@ -1,13 +1,10 @@
-module.exports = (app, state) => {
+const state = require("../data/state");
+
+module.exports = (app) => {
 
     app.get("/status", (req, res) => {
 
-        res.json({
-            status: state.connected ? "CONNECTED" : "DISCONNECTED",
-            symbol: state.symbol,
-            price: state.price,
-            signal: state.signal
-        });
+        res.json(state);
 
     });
 
