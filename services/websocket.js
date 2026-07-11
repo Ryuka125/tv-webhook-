@@ -1,11 +1,11 @@
 const state = require("../data/state");
 
-function connect() {
+function connectWebSocket() {
 
-    console.log("WebSocket siap dijalankan");
+    console.log("WebSocket Service Running...");
 
     state.connected = true;
 
 }
 
-module.exports = connect;
+module.exports = connectWebSocket;
