@@ -57,13 +57,13 @@ function loadCandles() {
             res.on("end", () => {
 
                 candles = JSON.parse(data);
-                const closes = candles.map(c => Number(c[4]));
+                 const closes = candles.map(c => Number(c[4]));
 
-                ema20 = calculateEMA(20, closes);
+                  ema20 = calculateEMA(20, closes);
 
-                ema50 = calculateEMA(50, closes);
+                  ema50 = calculateEMA(50, closes);
 
-                console.log("EMA20 :", ema20);
+                 console.log("EMA20 :", ema20);
                 console.log("EMA50 :", ema50);
 
                 console.log(
