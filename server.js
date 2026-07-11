@@ -20,7 +20,8 @@ app.get("/status", (req, res) => {
     res.json({
         status: connected ? "CONNECTED" : "DISCONNECTED",
         symbol: "BTCUSDT",
-        price: lastPrice
+        price:lastPrice,
+        candles:candles.length
     });
 });
 
