@@ -1,127 +1,151 @@
-const https = require("https");
 const express = require("express");
-const WebSocket = require("ws");
+const Binance = require("binance-api-node").default;
 
 const app = express();
+app.use(express.json());
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
+
+const client = Binance();
 
 let lastPrice = 0;
-let candles = [];
 let ema20 = 0;
 let ema50 = 0;
-let trend = "SIDEWAYS";
-let connected = false;
+let signal = "WAIT";
 
-if (ema20 > ema50) {
-    trend = "BUY";
-} else if (ema20 < ema50) {
-    trend = "SELL";
-} else {
-    trend = "SIDEWAYS";
-}
+let closes = [];
 
-// Website
-app.get("/", (req, res) => {
-    res.send("Trading Bot Online");
-});
+// ===============================
+// Hitung EMA
+// ===============================
+function calculateEMA(period, prices) {
 
-// Status bot
-app.get("/status", (req, res) => {
-    res.json({
-    status: connected ? "CONNECTED" : "DISCONNECTED",
-    symbol: "BTCUSDT",
-    price: lastPrice,
-    candles: candles.length,
-    ema20,
-    ema50,
-    trend
-  });
-});
-
-// Koneksi WebSocket Binance
-const ws = new WebSocket(
-    "wss://stream.binance.com:9443/ws/btcusdt@trade"
-);
-
-function loadCandles() {
-
-    https.get(
-        "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=100",
-        res => {
-
-            let data = "";
-
-            res.on("data", chunk => data += chunk);
-
-            res.on("end", () => {
-
-                candles = JSON.parse(data);
-                 const closes = candles.map(c => Number(c[4]));
-                
-                ema20 = calculateEMA(20, closes);
-                ema50 = calculateEMA(50, closes);
-
-                 console.log("EMA20 :", ema20);
-                console.log("EMA50 :", ema50);
-
-                console.log(
-                    "Candles berhasil diambil:",
-                    candles.length
-                );
-
-            });
-
-        }
-    );
-
-}
-
-ws.on("open", () => {
-    connected = true;
-    console.log("✅ Terhubung ke Binance");
-});
-
-ws.on("message", (data) => {
-
-    const json = JSON.parse(data);
-
-    lastPrice = Number(json.p);
-
-    console.clear();
-    console.log("====================");
-    console.log("BTCUSDT");
-    console.log("Harga :", lastPrice);
-    console.log("Waktu :", new Date().toLocaleString());
-    console.log("====================");
-
-});
-
-ws.on("close", () => {
-    connected = false;
-    console.log("❌ WebSocket ditutup");
-});
-
-ws.on("error", (err) => {
-    connected = false;
-    console.log("ERROR :", err.message);
-});
-
-app.listen(PORT, () => {
-    loadCandles();
-    function calculateEMA(period, closes) {
+    if (prices.length < period)
+        return null;
 
     const multiplier = 2 / (period + 1);
 
-    let ema = closes[0];
+    let ema =
+        prices.slice(0, period).reduce((a, b) => a + b, 0) / period;
 
-    for (let i = 1; i < closes.length; i++) {
-        ema = (closes[i] - ema) * multiplier + ema;
+    for (let i = period; i < prices.length; i++) {
+
+        ema =
+            ((prices[i] - ema) * multiplier) + ema;
+
     }
 
-    return ema;
-         }
+    return Number(ema.toFixed(2));
+}
 
-setInterval(loadCandles,60000);
+// ===============================
+// Ambil Candle Binance
+// ===============================
+async function updateEMA() {
+
+    try {
+
+        const candles = await client.candles({
+            symbol: "BTCUSDT",
+            interval: "1m",
+            limit: 100
+        });
+
+        closes = candles.map(c => Number(c.close));
+
+        lastPrice = closes[closes.length - 1];
+
+        ema20 = calculateEMA(20, closes);
+
+        ema50 = calculateEMA(50, closes);
+
+        if (ema20 && ema50) {
+
+            if (ema20 > ema50)
+                signal = "BUY";
+
+            else if (ema20 < ema50)
+                signal = "SELL";
+
+            else
+                signal = "WAIT";
+
+        }
+
+        console.clear();
+
+        console.log("======================");
+        console.log("BTCUSDT");
+        console.log("Price :", lastPrice);
+        console.log("EMA20 :", ema20);
+        console.log("EMA50 :", ema50);
+        console.log("Signal:", signal);
+        console.log("======================");
+
+    } catch (err) {
+
+        console.log(err.message);
+
+    }
+
+}
+
+setInterval(updateEMA, 5000);
+
+updateEMA();
+
+// ===============================
+// Home
+// ===============================
+app.get("/", (req, res) => {
+
+    res.send("Trading Bot Online");
+
+});
+
+// ===============================
+// Status
+// ===============================
+app.get("/status", (req, res) => {
+
+    res.json({
+
+        status: "CONNECTED",
+
+        symbol: "BTCUSDT",
+
+        price: lastPrice,
+
+        ema20,
+
+        ema50,
+
+        signal
+
+    });
+
+});
+
+// ===============================
+// Webhook
+// ===============================
+app.post("/webhook", (req, res) => {
+
+    console.log("Webhook:");
+
+    console.log(req.body);
+
+    res.json({
+
+        success: true
+
+    });
+
+});
+
+// ===============================
+app.listen(PORT, () => {
+
     console.log("Server berjalan di port", PORT);
+
 });
