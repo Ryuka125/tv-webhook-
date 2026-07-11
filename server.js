@@ -1,3 +1,4 @@
+const https = require("https");
 const express = require("express");
 const WebSocket = require("ws");
 
@@ -6,6 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 let lastPrice = 0;
+let candles = [];
 let connected = false;
 
 // Website
