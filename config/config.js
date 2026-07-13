@@ -1,9 +1,11 @@
-module.exports={
+module.exports = {
 
-    symbol:"ETHUSDT",
+    PORT: process.env.PORT || 8080,
 
-    interval:"15m",
+    SYMBOL: "BTCUSDT",
 
-    limit:100
+    EMA_FAST: 20,
 
-}
+    EMA_SLOW: 50
+
+};
