@@ -2,6 +2,10 @@ require("dotenv").config();
 
 const express = require("express");
 
+const config = require("./config/config");
+
+const logger = require("./utils/logger");
+
 const marketService = require("./services/marketService");
 
 const orderService = require("./services/orderService");
@@ -22,6 +26,6 @@ marketService.startMarket();
 
 websocketService.startSocket();
 
-app.listen(PORT, () => {
-    console.log(`Server running on ${PORT}`);
+app.listen(config.PORT, () => {
+    logger.info(`Server Running on Port ${config.PORT}`);
 });
