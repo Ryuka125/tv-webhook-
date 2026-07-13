@@ -9,7 +9,7 @@ module.exports = {
 
     SYMBOL: process.env.SYMBOL || "BTCUSDT",
 
-    INTERVAL: process.env.INTERVAL || "1m",
+    INTERVAL: process.env.INTERVAL || "15m",
 
     LEVERAGE: Number(process.env.LEVERAGE || 10),
 
