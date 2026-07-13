@@ -14,7 +14,7 @@ app.use(express.json());
 
 app.use(logger);
 
-app.use("/", webhookRoute);
+//app.use("/", webhookRoute);
 
 websocket.startWebSocket();
 
