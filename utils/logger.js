@@ -1,7 +1,17 @@
-function log(title, value){
-
-    console.log(`[${new Date().toLocaleTimeString()}] ${title}`, value);
-
+function info(message) {
+    console.log(`[INFO] ${new Date().toISOString()} | ${message}`);
 }
 
-module.exports = log;
+function error(message) {
+    console.error(`[ERROR] ${new Date().toISOString()} | ${message}`);
+}
+
+function warn(message) {
+    console.warn(`[WARN] ${new Date().toISOString()} | ${message}`);
+}
+
+module.exports = {
+    info,
+    warn,
+    error
+};
