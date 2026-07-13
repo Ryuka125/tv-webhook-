@@ -1,17 +1,9 @@
 const express = require("express");
+
 const router = express.Router();
 
-const trading = require("../services/tradingService");
+const controller = require("../controllers/webhookController");
 
-router.post("/", (req, res) => {
-
-    const result = trading.analyze(
-        req.body.closes || [],
-        req.body.candles || []
-    );
-
-    res.json(result);
-
-});
+router.post("/", controller.webhook);
 
 module.exports = router;
