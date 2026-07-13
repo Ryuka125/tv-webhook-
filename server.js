@@ -10,6 +10,8 @@ const marketService = require("./services/marketService");
 
 const orderService = require("./services/orderService");
 
+const accountService = require("./services/accountService");
+
 const websocketService = require("./services/websocketService");
 
 const webhookRoute = require("./routes/webhook");
