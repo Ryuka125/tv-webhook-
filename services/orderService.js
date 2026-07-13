@@ -1,11 +1,11 @@
-console.log("Order Service Running...");
+const logger = require("../utils/logger");
 
 function buy(symbol) {
-    console.log(`BUY ${symbol}`);
+    logger.info(`BUY ${symbol}`);
 }
 
 function sell(symbol) {
-    console.log(`SELL ${symbol}`);
+    logger.info(`SELL ${symbol}`);
 }
 
 module.exports = {
