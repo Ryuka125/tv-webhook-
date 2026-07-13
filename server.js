@@ -16,9 +16,17 @@ const websocketService = require("./services/websocketService");
 
 const webhookRoute = require("./routes/webhook");
 
+const statusRoute = require("./routes/status");
+
+const healthRoute = require("./routes/health");
+
 const app = express();
 
 app.use(express.json());
+
+app.use("/status", statusRoute);
+
+app.use("/health", healthRoute);
 
 app.use("/", webhookRoute);
 
