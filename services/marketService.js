@@ -1,7 +1,7 @@
-console.log("Market Service Running...");
+const logger = require("../utils/logger");
 
 function startMarket() {
-    console.log("Market Started");
+    logger.info("Market Service Started");
 }
 
 module.exports = {
