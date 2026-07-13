@@ -2,9 +2,11 @@ const state = require("../data/state");
 
 function updateMarket() {
 
-    console.log("Market Service Running...");
+    // Nanti di sini ambil data Binance
 
-    state.price = state.price + 1;
+    // state.price = ...
+    // state.ema20 = ...
+    // state.signal = ...
 
 }
 
