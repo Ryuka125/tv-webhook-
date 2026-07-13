@@ -1,24 +1,9 @@
-const Binance = require("binance-api-node").default;
+console.log("WebSocket Service Running...");
 
-const client = Binance();
-
-let lastPrice = 0;
-
-function startWebSocket(symbol = "BTCUSDT") {
-
-    client.ws.ticker(symbol, (ticker) => {
-
-        lastPrice = Number(ticker.curDayClose);
-
-    });
-
-}
-
-function getPrice() {
-    return lastPrice;
+function startSocket() {
+    console.log("WebSocket Connected");
 }
 
 module.exports = {
-    startWebSocket,
-    getPrice
+    startSocket
 };
