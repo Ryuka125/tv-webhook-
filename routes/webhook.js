@@ -2,8 +2,18 @@ const express = require("express");
 
 const router = express.Router();
 
-const controller = require("../controllers/webhookController");
+router.get("/", (req, res) => {
+    res.send("Trading Bot Running");
+});
 
-router.post("/", controller.webhook);
+router.post("/webhook", (req, res) => {
+
+    console.log(req.body);
+
+    res.json({
+        success:true
+    });
+
+});
 
 module.exports = router;
