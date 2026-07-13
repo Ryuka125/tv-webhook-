@@ -24,6 +24,8 @@ const PORT = process.env.PORT || 8080;
 
 marketService.startMarket();
 
+accountService.checkAccount();
+
 websocketService.startSocket();
 
 app.listen(config.PORT, () => {
