@@ -2,26 +2,16 @@ require("dotenv").config();
 
 const express = require("express");
 
-const websocket = require("./services/websocketService");
-
-const market = require("./services/marketService");
-
-const logger = require("./middlewares/logger");
+const webhookRoute = require("./routes/webhook");
 
 const app = express();
 
 app.use(express.json());
 
-app.use(logger);
+app.use("/", webhookRoute);
 
-//app.use("/", webhookRoute);
+const PORT = process.env.PORT || 8080;
 
-websocket.startWebSocket();
-
-app.get("/", (req, res) => {
-
-    res.json(market.getMarketData());
-
+app.listen(PORT, () => {
+    console.log(`Server running on ${PORT}`);
 });
-
-app.listen(process.env.PORT || 8080);
