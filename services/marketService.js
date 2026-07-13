@@ -1,17 +1,9 @@
-const websocket = require("./websocketService");
+console.log("Market Service Running...");
 
-function getMarketData() {
-
-    return {
-
-        symbol: "BTCUSDT",
-
-        price: websocket.getPrice()
-
-    };
-
+function startMarket() {
+    console.log("Market Started");
 }
 
 module.exports = {
-    getMarketData
+    startMarket
 };
