@@ -4,7 +4,7 @@ const client = Binance();
 
 let lastPrice = 0;
 
-function startWebSocket(symbol = "ETHUSDT") {
+function startWebSocket(symbol = "BTCUSDT") {
 
     client.ws.ticker(symbol, (ticker) => {
 
