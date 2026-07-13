@@ -1,7 +1,7 @@
-console.log("WebSocket Service Running...");
+const logger = require("../utils/logger");
 
 function startSocket() {
-    console.log("WebSocket Connected");
+    logger.info("WebSocket Connected");
 }
 
 module.exports = {
