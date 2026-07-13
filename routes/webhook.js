@@ -1,14 +1,17 @@
-module.exports = (app) => {
+const express = require("express");
+const router = express.Router();
 
-    app.post("/webhook", (req, res) => {
+const trading = require("../services/tradingService");
 
-        console.log("Webhook diterima:");
-        console.log(req.body);
+router.post("/", (req, res) => {
 
-        res.json({
-            success: true
-        });
+    const result = trading.analyze(
+        req.body.closes || [],
+        req.body.candles || []
+    );
 
-    });
+    res.json(result);
 
-};
+});
+
+module.exports = router;
