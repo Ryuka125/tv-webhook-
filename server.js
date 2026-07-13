@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 
 const websocket = require("./services/websocketService");
