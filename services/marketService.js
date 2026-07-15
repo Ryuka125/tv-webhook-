@@ -1,7 +1,7 @@
 const Binance = require("binance-api-node").default;
 const config = require("../config/config");
 const logger = require("../utils/logger");
-const status = require("./statusService");
+const statusService = require("./statusService");
 
 const client = Binance({
     apiKey: config.BINANCE_API_KEY,
@@ -10,12 +10,21 @@ const client = Binance({
 
 async function startMarket() {
     try {
+
         const prices = await client.prices();
 
-        logger.info("Market Service Started");
-        logger.info(`${config.SYMBOL} Price : ${prices[config.SYMBOL]}`);
+        const price = Number(prices[config.SYMBOL]);
+
+        statusService.updateState({
+            price: price
+        });
+
+        logger.info(`${config.SYMBOL} Price : ${price}`);
+
     } catch (err) {
+
         logger.error(err.message);
+
     }
 }
 
