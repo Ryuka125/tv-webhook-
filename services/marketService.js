@@ -1,6 +1,7 @@
 const Binance = require("binance-api-node").default;
 const config = require("../config/config");
 const logger = require("../utils/logger");
+const status = require("./statusService");
 
 const client = Binance({
     apiKey: config.BINANCE_API_KEY,
