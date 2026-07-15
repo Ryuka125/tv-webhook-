@@ -2,7 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 
-const config = require("../config/config");
+const statusService = require("../services/statusService");
 
 router.get("/", (req, res) => {
 
@@ -10,27 +10,11 @@ router.get("/", (req, res) => {
 
         status: "ONLINE",
 
-        exchange: "Binance",
-
-        symbol: config.SYMBOL,
-
-        interval: config.INTERVAL,
-
-        price: 0,
-
-        signal: "HOLD",
-
-        trend: "SIDEWAYS",
-
-        position: "NONE",
-
-        websocket: "CONNECTED",
-
-        webhook: "ACTIVE",
+        uptime: process.uptime(),
 
         serverTime: new Date().toISOString(),
 
-        uptime: process.uptime()
+        ...statusService.getState()
 
     });
 
